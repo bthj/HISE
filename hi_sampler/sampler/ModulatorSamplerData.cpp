@@ -199,13 +199,18 @@ void SampleMap::setCurrentMonolith()
 					added = true;
 				}
 			}
-
+#if ! HISE_IOS
 			if(!added)
 				info.addSampleDirectory(getCurrentFileHandler()->getSubDirectory(ProjectHandler::SubDirectories::Samples));
-
+#endif
 			try
 			{
-				auto mainDirectory = sampler->getMainController()->getCurrentFileHandler().getSubDirectory(ProjectHandler::SubDirectories::Samples);
+                File mainDirectory;
+#if HISE_IOS
+                mainDirectory = File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory);
+#else
+                mainDirectory = sampler->getMainController()->getCurrentFileHandler().getSubDirectory(ProjectHandler::SubDirectories::Samples);
+#endif
 
 				if (!mainDirectory.isDirectory())
 					throw Result::fail("The sample directory does not exist");

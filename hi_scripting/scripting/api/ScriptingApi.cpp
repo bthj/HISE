@@ -5858,7 +5858,12 @@ juce::File ScriptingApi::FileSystem::getFile(SpecialLocations l)
 
 	switch (l)
 	{
-	case Samples:	f = getMainController()->getCurrentFileHandler().getSubDirectory(FileHandlerBase::Samples);
+	case Samples:
+#if HISE_IOS
+        f = File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory);
+#else
+        f = getMainController()->getCurrentFileHandler().getSubDirectory(FileHandlerBase::Samples);
+#endif
 		break;
 	case Expansions: return getMainController()->getExpansionHandler().getExpansionFolder();
 #if USE_BACKEND
